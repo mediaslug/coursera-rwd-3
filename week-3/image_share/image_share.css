@@ -1,0 +1,14 @@
+/* CSS declarations go here */
+
+.thumbnail {
+	max-height: 500px;
+	min-height: 500px;
+}
+
+.thumbnail-img {
+	max-height: 300px;
+}
+
+body {
+	padding:60px;
+}
