@@ -51,6 +51,11 @@
 
 		<button class="btn btn-success js-show-image-form">Add Image</button>
 	{{/if}}
+	<h2>
+		{{#if filtering_images}}
+			Showing images from user {{getFilterUser}} <a href="#" class = "js-unset-image-filter"> Remove filter</a>
+		{{/if}}
+	</h2>
 	<div class = "row">
 		{{#each images}}
 

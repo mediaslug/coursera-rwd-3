@@ -2,12 +2,52 @@ Images = new Mongo.Collection("images");
 console.log(Images.find().count());
 
 if (Meteor.isClient) {
+  Session.set("imageLimit", 8);
+
+  lastScrollTop = 0;
+  
+  $(window).scroll(function(event){
+    // test if we are near the bottom of the window
+    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
+
+          console.log(new Date());
+
+    }
+  });
+
   Accounts.ui.config({
     passwordSignupFields: "USERNAME_AND_EMAIL"
   })
 
   Template.images.helpers({
-    images:Images.find({}, {sort:{createdOn: -1, rating:-1}}),
+    images:function(){ // helper to find images
+      if (Session.get("userFilter")) {
+        return Images.find({createdBy:Session.get("userFilter")}, {sort:{createdOn: -1, rating:-1}}) 
+
+      } else {
+        return Images.find({}, {sort:{createdOn: -1, rating:-1}, limit:Session.get("imageLimit")})
+
+      } // end if check for user filter in Session
+    }, // end function
+
+    filtering_images:function(event){
+      if (Session.get('userFilter')) {
+        return true;
+      } else {
+        return false; 
+      } // end if
+    }, // end function
+
+    getFilterUser:function(event) {
+      if (Session.get('userFilter')) {
+        var user = Meteor.users.findOne({_id:Session.get('userFilter')});
+        return user.username;
+      } else {
+        return false;
+      }
+
+
+    }, // end function
     getUser:function(user_id) { // the helper takes user_id as a parameter
       var user = Meteor.users.findOne({_id:user_id});
       if (user) {
@@ -66,11 +106,19 @@ if (Meteor.isClient) {
       $("#image_add_form").modal('show');
     }, 
 
-    'click js-set-image-filter': function(event) {
+    'click .js-set-image-filter': function(event) {
       // this is the data context for the template in which the event occured.
       Session.set("userFilter",this.createdBy)
+      console.log("setting user filter to" + this.createdBy);
 
-    } // end js-set-image-filter click
+    }, // end js-set-image-filter click
+
+    'click .js-unset-image-filter': function(event) {
+      console.log("remove the filter");
+      Session.set("userFilter",undefined)
+
+
+    }
 
 
   }); // end images events
