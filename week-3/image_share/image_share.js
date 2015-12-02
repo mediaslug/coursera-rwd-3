@@ -7,12 +7,17 @@ if (Meteor.isClient) {
   lastScrollTop = 0;
   
   $(window).scroll(function(event){
-    // test if we are near the bottom of the window
-    if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-      
-          console.log(new Date());
 
-    }
+      // where are we in the page? 
+      var scrollTop = $(this).scrollTop();
+      // test if we are going down
+      if (scrollTop > lastScrollTop){
+        // yes we are heading down...
+        Session.set("imageLimit", Session.get("imageLimit") + 4); // add for to the imageLimit this will load 4 more on each scroll
+        console.log(Session.get("imageLimit"));
+      }
+
+      lastScrollTop = scrollTop;
   });
   // reconfigure the accoint system to allow for username and email, rather than just email
   Accounts.ui.config({
