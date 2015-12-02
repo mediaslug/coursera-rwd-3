@@ -9,28 +9,29 @@ if (Meteor.isClient) {
   $(window).scroll(function(event){
     // test if we are near the bottom of the window
     if ($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-
+      
           console.log(new Date());
 
     }
   });
-
+  // reconfigure the accoint system to allow for username and email, rather than just email
   Accounts.ui.config({
     passwordSignupFields: "USERNAME_AND_EMAIL"
   })
 
   Template.images.helpers({
     images:function(){ // helper to find images
-      if (Session.get("userFilter")) {
+      if (Session.get("userFilter")) { // if there is a user filter, find images based on the filter
+        // createdBy must be equal to session.get("userFilter"), which is a mongo filter
         return Images.find({createdBy:Session.get("userFilter")}, {sort:{createdOn: -1, rating:-1}}) 
 
-      } else {
+      } else { // find all images
         return Images.find({}, {sort:{createdOn: -1, rating:-1}, limit:Session.get("imageLimit")})
 
       } // end if check for user filter in Session
     }, // end function
 
-    filtering_images:function(event){
+    filtering_images:function(event){ // determine if we are filtering users
       if (Session.get('userFilter')) {
         return true;
       } else {
@@ -38,9 +39,9 @@ if (Meteor.isClient) {
       } // end if
     }, // end function
 
-    getFilterUser:function(event) {
+    getFilterUser:function(event) { // get the username of the user we're filtering on
       if (Session.get('userFilter')) {
-        var user = Meteor.users.findOne({_id:Session.get('userFilter')});
+        var user = Meteor.users.findOne({_id:Session.get('userFilter')}); // the session variable is used as a filter
         return user.username;
       } else {
         return false;
@@ -48,8 +49,13 @@ if (Meteor.isClient) {
 
 
     }, // end function
-    getUser:function(user_id) { // the helper takes user_id as a parameter
-      var user = Meteor.users.findOne({_id:user_id});
+    getUser:function(user_id) { 
+      // findOne is another way of pulling something out of a MongoDb
+      // Meteor.users provides access to a collection that we can call find on.
+
+      // the helper takes user_id as a parameter.  the filter is _id. so the user's id needs 
+      // to be equal to the id that is getting passed in in the html template. 
+      var user = Meteor.users.findOne({_id:user_id});   
       if (user) {
         return user.username;
 
@@ -65,10 +71,16 @@ if (Meteor.isClient) {
   // Template helper function to provide the template access to the user data
   // This the body template, because this is going to happen in the main body of the document 
   // helpers function allows me to bind helper functions to the template.
+
+  // btw, this template helper is being run twice because Meteor.user is reactive (if the data changes, then the template gets re-rendered)
   Template.body.helpers({
     username: function() {
-      if (Meteor.user()) {
-        return Meteor.user().emails[0].address;
+
+      // if the user is logged in, get the email address
+      if (Meteor.user()) { // Meteor.user object with several properties. returns truthy or falsey
+        return Meteor.user().username;
+
+        //return Meteor.user().emails[0].address;
       } else {
         return "anon";
       }
@@ -95,21 +107,27 @@ if (Meteor.isClient) {
     'click .js-rate-image':function(event) {
       var rating = $(event.currentTarget).data("userrating")
       console.log(rating);
-      var image_id = this.id; // this refers to the data representing the template
+      var image_id = this.id; // "this" refers to the data representing the template
       console.log(image_id);
       Images.update({_id:image_id}, {$set: {rating:rating}}) // first argument is the id of the image to update. second argument is the thing you want to change
 
+    }, // end click js-rate-image
 
-    },
-
-    'click .js-show-image-form':function(event) {
+    'click .js-show-image-form':function(event) {      
       $("#image_add_form").modal('show');
-    }, 
+
+    }, // end click js-show-image-form
+
 
     'click .js-set-image-filter': function(event) {
-      // this is the data context for the template in which the event occured.
-      Session.set("userFilter",this.createdBy)
-      console.log("setting user filter to" + this.createdBy);
+      // "this" is the data context for the template in which the event occured. 
+      // "this" gives us access to the object the template is displaying, which in this case is a single image
+      
+      // session allows us to store temporary variables so that we can keep track of state of things in our app
+      // session stores key-value pairs and is reactive.
+      
+      Session.set("userFilter",this.createdBy); 
+      console.log("setting Session property/variable userFilter to " + this.createdBy);
 
     }, // end js-set-image-filter click
 
@@ -134,7 +152,7 @@ if (Meteor.isClient) {
           img_src:img_src,
           img_alt:img_alt,
           createdOn: new Date(),
-          createdBy: Meteor.user()._id
+          createdBy: Meteor.user()._id // _id provides access to unique database id for the user
         });
         
       }

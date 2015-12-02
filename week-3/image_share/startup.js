@@ -6,7 +6,8 @@ if (Meteor.isServer) {
 				Images.insert(
 				{
      				img_src: "img_" + i + ".jpg",
-      				img_alt: "image number " + i
+      				img_alt: "image number " + i,
+      				createdOn: new Date(),
    				}	
 
 				); 
