@@ -1,8 +1,5 @@
-Images = new Mongo.Collection("images");
-console.log(Images.find().count());
-
-if (Meteor.isClient) {
-  Session.set("imageLimit", 8);
+console.log("on the client from separate file");
+ Session.set("imageLimit", 8);
 
   lastScrollTop = 0; 
   $(window).scroll(function(event){
@@ -171,33 +168,3 @@ if (Meteor.isClient) {
     } // end submit click event
 
   });
-
-} // end isClient
-
-if (Meteor.isServer) {
-  console.log("i am the server ")
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
