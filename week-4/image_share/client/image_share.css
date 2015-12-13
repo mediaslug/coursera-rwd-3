@@ -12,3 +12,7 @@
 body {
 	padding:60px;
 }
+
+single-img {
+	max-width:100%;
+}

@@ -1,12 +1,40 @@
 console.log("on the client from separate file");
 /// iron router
-Router.route('/', function () {
-  this.render('navbar')
+
+// configure the router
+// apllicationlayout is a "super" template into which we can insert other templates
+// you can have one global layout and swap out the components within that layout
+Router.configure({
+	layoutTemplate:"ApplicationLayout"
+});
+Router.route('/', function() {
+	this.render("welcome", {
+		to:"main"
+	});
+	
 });
 
 Router.route('/images', function () {
-  this.render('images')
+  this.render('navbar', {
+	  to:"navbar"
+  });
+  this.render('images', {
+  	to:"main"
+  });
 });
+
+Router.route('/image/:_id', function () {
+  this.render('navbar', {
+	  to:"navbar"
+  });
+  this.render('image', {
+  	to:"main",
+	data: function() {
+		return Images.findOne({_id:this.params._id});
+	}
+  });
+});
+
 
 /// infini scroll
 Session.set("imageLimit", 8);
