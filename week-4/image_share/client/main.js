@@ -1,7 +1,16 @@
 console.log("on the client from separate file");
- Session.set("imageLimit", 8);
+/// iron router
+Router.route('/', function () {
+  this.render('navbar')
+});
 
-  lastScrollTop = 0; 
+Router.route('/images', function () {
+  this.render('images')
+});
+
+/// infini scroll
+Session.set("imageLimit", 8);
+lastScrollTop = 0; 
   $(window).scroll(function(event){
     // test if we are near the bottom of the window
     if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
@@ -77,7 +86,8 @@ console.log("on the client from separate file");
   // This the body template, because this is going to happen in the main body of the document 
   // helpers function allows me to bind helper functions to the template.
 
-  // btw, this template helper is being run twice because Meteor.user is reactive (if the data changes, then the template gets re-rendered)
+  // btw, this template helper is being run twice because Meteor.user is reactive 
+  // (if the data changes, then the template gets re-rendered)
   Template.body.helpers({
     username: function() {
 
