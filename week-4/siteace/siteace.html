@@ -10,6 +10,7 @@
 	      <a class="navbar-brand" href="#">
 	        Site Ace
 	      </a>
+	       {{> loginButtons}} 
 	    </div>
 	  </div>
 	</nav>
@@ -59,7 +60,7 @@
 <li>
 	<a href="{{url}}">{{title}}</a>
 	<p>
-		{{description}}
+		{{description}} {{voteCount}}
 	</p>
 	<a href="#" class="btn btn-default js-upvote">
 		<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>

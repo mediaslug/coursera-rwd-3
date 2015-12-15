@@ -35,4 +35,5 @@ Images.allow({
 		//console.log(_id);
 		return true;
 	}
-}) 
+
+}); 

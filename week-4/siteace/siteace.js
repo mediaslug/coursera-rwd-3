@@ -2,6 +2,11 @@ Websites = new Mongo.Collection("websites");
 
 if (Meteor.isClient) {
 
+	// configure the accounts ui interface
+	Accounts.ui.config({
+  		passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'
+	});
+
 	/////
 	// template helpers 
 	/////
@@ -24,7 +29,9 @@ if (Meteor.isClient) {
 			// (this is the data context for the template)
 			var website_id = this._id;
 			console.log("Up voting website with id "+website_id);
+
 			// put the code in here to add a vote to a website!
+
 
 			return false;// prevent the button from reloading the page
 		}, 
@@ -36,6 +43,10 @@ if (Meteor.isClient) {
 			console.log("Down voting website with id "+website_id);
 
 			// put the code in here to remove a vote from a website!
+			// get the current vote for the website id
+			Websites.find({ _id: "-------" }); // change  to website id
+			// subtract 1 from the voteCount
+			// store the vote back in the database
 
 			return false;// prevent the button from reloading the page
 		}
@@ -49,10 +60,24 @@ if (Meteor.isClient) {
 
 			// here is an example of how to get the url out of the form:
 			var url = event.target.url.value;
-			console.log("The url they entered is: "+url);
-			
-			//  put your website saving code in here!	
+			var description = event.target.description.value;
+			var title = event.target.title.value;
 
+
+			console.log("The url they entered is: "+url +description);
+
+			//  put your website saving code in here!
+
+	      	if (Meteor.user()) { // is user logged in
+				Websites.insert({
+					url:url,
+					title:title,
+					description:description,
+	          		createdOn: new Date(),
+	          		createdBy: Meteor.user()._id, // _id provides access to unique database id for the user
+	          		vote: 0
+	          	})	
+			} // end if user logged in
 			return false;// stop the form submit from reloading the page
 
 		}

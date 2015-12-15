@@ -1,0 +1,101 @@
+<head>
+  <title>image_share</title>
+</head>
+
+<body>
+</body>
+<!-- this is the global template we can render other templates within this-->
+<template name="ApplicationLayout">
+	<!-- points at which i can insert content. "yield" is a placehoder for the router-->
+    {{>yield "navbar"}}
+    {{>yield "main"}}
+
+</template>
+
+
+<template name = "welcome">
+	<div class="container">
+        <div class="jumbotron">
+            <h1>Welcome to image share {{username}}!</h1>
+            <a href="/images" class="btn btn-info"> Enter </a>
+            
+        </div>
+   </div>
+</template>
+<template name = "image">
+    <div class="container">
+        <h2> {{img_alt}} </h2>
+        <a href="/images"><img src="/{{img_src}}" class="single-img" /> </a>
+    </div>
+</template>
+<template name="navbar">
+
+	<nav class = "navbar navbar-default navbar-fixed-top">
+		<div class="container">
+	  		<!-- Add Password and account functionality 	-->
+			{{> loginButtons}}
+		</div> 
+	</nav>
+</template>
+
+<template name = "image_add_form">
+
+	<div class = "modal fade" id="image_add_form">
+		<div class = "modal-dialog">
+			<div class = "modal-content">
+				<div class = "modal-header">
+					<div class = "modal-title">
+					</div>
+				</div>
+				<div class = "modal-body">
+					<form class="js-add-image">
+						<input type = "text" name="img_src" /> <br />
+						<input type = "text" name="img_alt" />		
+						<button class = "btn btn-success">Save</button>
+					</form>
+
+				</div>
+				<div class = "modal-footer">
+					<button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</template>
+
+<template name="images">
+	<div class="container js-container">
+
+            <!-- currentUser is built-in template helper accessible in any template, so there's no need to create a helper for this. will be true if they are logged in. false if they are not -->
+            {{#if currentUser}}
+        
+                <button class="btn btn-success js-show-image-form">Add Image</button>
+            {{/if}}
+            <h2>
+                {{#if filtering_images}}
+                    Showing images from user {{getFilterUser}} <a href="#" class = "js-unset-image-filter"> Remove filter</a>
+                {{/if}}
+            </h2>
+            <div class = "row">
+                {{#each images}}
+        
+                    <div class = "col-xs-12 col-md-3"  id = "{{_id}}">
+                        <div class = "thumbnail">
+                            <a href="/image/{{_id}}"><img class = "js-image thumbnail-img" src = "{{img_src}}" alt = "{{img_alt}}" /> </a>
+        
+                            <div class="caption">
+                                <h3> Rating: {{rating}} </h3>
+                                <p>{{img_alt}}</p>
+                                <p> User: <a href = "#" class = "js-set-image-filter"> {{getUser createdBy}}</a></p>	
+                                {{>starsRating mutable=true class="js-rate-image" id=_id rating=rating}}
+                                <button class="js-del-image btn btn-warning">Delete</button>
+        
+                            </div>
+                        </div>
+                    </div> <!-- end col-->
+                {{/each}}
+            </div> <!-- end row -->
+        </div> <!-- end container div -->
+
+</template>

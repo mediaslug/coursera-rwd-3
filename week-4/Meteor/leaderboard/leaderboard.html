@@ -1,0 +1,54 @@
+<head>
+  <title>leaderboard</title>
+</head>
+
+<body>
+
+	{{> loginButtons}}
+  <h1>Welcome to Leaderboard!</h1>
+  	{{> addPlayerForm}}
+  	{{> leaderboard}}
+</body>
+
+<template name="leaderboard">
+
+	There are {{count}} players.
+
+	<!-- the documents from the “PlayersList” collection are retrieved based on the reference to the player function.-->
+
+	<ul>
+		{{#each player}}	
+		<!-- within the each block we can also retrieve the fields from our document (aka row)-->
+		<!-- Helper functions and events inside an each block have access to the data that’s being
+			 iterated through by that block. -->
+			<li class="player {{selectedClass}}">{{name}} {{score}}</li>
+		{{/each}}
+	</ul>
+
+	<!-- only try to show selected player if a player is selected -->
+	{{#if showSelectedPlayer}}
+	<!-- specify that we only want to show the value of the name field, which can be done with dot notation-->
+		Selected Player: {{showSelectedPlayer.name}}
+
+	<p>
+		<input type = "button" class = "increment" value="give 5 points">
+		<input type = "button" class = "decrement" value="taketh 5 points">
+    </p>
+    <input type = "button" class="remove" value="remove a person">
+
+	{{/if}}
+
+
+</template>
+
+<template name="addPlayerForm">
+	{{#if currentUser}}
+		<form>
+			<input type="text" name="playerName">
+			<input type="text" name="playerScore">
+
+			<input type="submit" value="Add Player">
+		</form>
+	{{/if}}
+</template>
+
