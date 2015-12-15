@@ -14,8 +14,13 @@ if (Meteor.isClient) {
 	// helper function that returns all available websites
 	Template.website_list.helpers({
 		websites:function(){
-			return Websites.find({});
-		}
+			return Websites.find({},  {sort: {vote: -1, title:1}});
+		},
+		count:function() {
+          var currentUser = Meteor.userId();
+          return Websites.find({createdBy:currentUser}).count();
+        },
+
 	});
 
 
@@ -27,11 +32,12 @@ if (Meteor.isClient) {
 		"click .js-upvote":function(event){
 			// example of how you can access the id for the website in the database
 			// (this is the data context for the template)
-			var website_id = this._id;
-			console.log("Up voting website with id "+website_id);
+			var websiteId = this._id;
+			console.log("Up voting website with id "+websiteId);
+
 
 			// put the code in here to add a vote to a website!
-
+			Websites.update(websiteId, {$inc:{vote: 1}})
 
 			return false;// prevent the button from reloading the page
 		}, 
@@ -39,8 +45,10 @@ if (Meteor.isClient) {
 
 			// example of how you can access the id for the website in the database
 			// (this is the data context for the template)
-			var website_id = this._id;
-			console.log("Down voting website with id "+website_id);
+			var websiteId = this._id;
+			console.log("Down voting website with id "+websiteId);
+			Websites.update(websiteId, {$inc:{vote: -1}})
+
 
 			// put the code in here to remove a vote from a website!
 			// get the current vote for the website id
@@ -84,7 +92,6 @@ if (Meteor.isClient) {
 	});
 }
 
-
 if (Meteor.isServer) {
 	// start up function that creates entries in the Websites databases.
   Meteor.startup(function () {
@@ -95,25 +102,29 @@ if (Meteor.isServer) {
     		title:"Goldsmiths Computing Department", 
     		url:"http://www.gold.ac.uk/computing/", 
     		description:"This is where this course was developed.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		vote:0
     	});
     	 Websites.insert({
     		title:"University of London", 
     		url:"http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route", 
     		description:"University of London International Programme.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		vote:0
     	});
     	 Websites.insert({
     		title:"Coursera", 
     		url:"http://www.coursera.org", 
     		description:"Universal access to the world’s best education.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		vote:0
     	});
     	Websites.insert({
     		title:"Google", 
     		url:"http://www.google.com", 
     		description:"Popular search engine.", 
-    		createdOn:new Date()
+    		createdOn:new Date(),
+    		vote:0
     	});
     }
   });

@@ -2,3 +2,12 @@
 .hidden_div{
 	display:none;
 }
+.vote {
+	font-size: 145%;
+	background-color: #999966;
+	padding: 5px 10px 5px 10px;
+	border: 1px;
+	border-style: solid;
+	margin: 2px;
+
+}

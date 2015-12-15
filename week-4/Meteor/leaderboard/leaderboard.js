@@ -1,6 +1,8 @@
 PlayersList = new Mongo.Collection('players');
 
 if (Meteor.isClient) {
+  //If you imagine that the publish function is transmitting data into the ether, then the subscribe function is what we use to “catch” that data.
+  Meteor.subscribe("thePlayers");
   // By creating helper functions, we can execute code from within a template, thereby creating a dynamic interface.
   // the helpers keyword is a special keyword that allows us to define multiple helper functions inside a single block of code.
 
@@ -14,8 +16,12 @@ if (Meteor.isClient) {
           (alphabetical) order.
 
           */
-          return PlayersList.find({}, {sort: {score: -1, name:1}});
+
+          // get the current user
+          var currentUser = Meteor.userId();
+          return PlayersList.find({createdBy:currentUser}, {sort: {score: -1, name:1}});
         },
+
         selectedClass:function() {
           var playerId = this._id;
           // retrieve the unique ID of the currently selected player:
@@ -25,8 +31,11 @@ if (Meteor.isClient) {
           }
           
         },
+
         count:function() {
-          return PlayersList.find().count();
+          var currentUser = Meteor.userId();
+
+          return PlayersList.find({createdBy:currentUser}).count();
         },
 
         showSelectedPlayer: function() {
@@ -34,7 +43,6 @@ if (Meteor.isClient) {
           var selectedPlayer = Session.get('selectedPlayer')
           // returns the data from a single document inside the “PlayersList” collection
           return PlayersList.findOne(selectedPlayer);
-
         }
     
   });
@@ -93,11 +101,13 @@ if (Meteor.isClient) {
       //event.preventDefault();
       // this statement uses the event object to grab whatever HTML element has the name attribute set to “playerName”.
       var playerNameVar = event.target.playerName.value;
-      var scoreVar = event.target.playerScore.value;
+      var scoreVar = parseInt(event.target.playerScore.value);
+      var currentUser = Meteor.userId();
       console.log(playerNameVar);
       PlayersList.insert({
         name: playerNameVar,
-        score: scoreVar
+        score: scoreVar, 
+        createdBy: currentUser
       });
 
       //return false; 
@@ -111,7 +121,16 @@ if (Meteor.isClient) {
 } // end is client
 
 if (Meteor.isServer) {
+   // PlayersList.insert({name:"warrick", score:0})
+   // PlayersList.insert({name:"tom", score:0})
+   // console.log(PlayersList.find().fetch());
+
+   // imagine that the publish function is transmitting data into the ether
+   Meteor.publish('thePlayers', function() {
+    var currentUserId = this.userId
+    return PlayersList.find({createdBy: currentUserId});
+   });
+
   
 }
 
-// PlayersList.insert({name:"warrick", score:0})
