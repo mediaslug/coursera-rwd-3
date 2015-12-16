@@ -28,7 +28,7 @@
 	  <div class="container-fluid">
 	    <div class="navbar-header">
 	      <a class="navbar-brand" href="/">
-	        Site Ace
+	        List of Sites
 	      </a>
 	       {{> loginButtons}} 
 	    </div>
@@ -77,9 +77,10 @@
 	<a href="{{url}}">{{title}}</a>
 	<p>
 		{{description}} <br />
-		Added {{createdOn}}
-		<a href = "/detail/{{_id}}" class="js-set-Id"> Details </a>
+		<span class="date"> Added {{createdOn}} </span>
 	</p>
+
+
 	<a href="#" class="btn btn-default js-upvote">
 		<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
 	</a>
@@ -89,6 +90,9 @@
 	<a href="#" class="btn btn-default js-downvote">
 		<span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
 	</a>
+
+	<p align='center'><a href = "/detail/{{_id}}" class="details-link js-set-Id"> Details </a></p>
+
 
 
 	<!-- you will be putting your up and down vote buttons in here! -->
@@ -100,10 +104,9 @@
 		<a href="{{url}}">{{title}}</a>
 			<p>
 				{{description}} <br />
-				Added {{createdOn}}
+				<span class="date"> Added {{createdOn}}</span>
 				<span class = "vote"> {{vote}} </span>
 			</p>
-{{_id}}
 			<p>
 				<form id="comments_form" class = "js-save-comment">
 					<textarea class="form-control" id="comment" name="comment"></textarea>
@@ -114,7 +117,7 @@
 
 			{{#each comments}}
 		<p class="comment">
-			{{comment}} <span class="date"> {{createdOn}}, {{_id}} </span>
+			{{comment}} <span class="date"> {{createdOn}} </span>
 		</p>
 
 	{{/each}}

@@ -9,7 +9,9 @@
 	border: 1px;
 	border-style: solid;
 	margin: 20px;
-
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
 }
 
 .website {
@@ -38,4 +40,19 @@
 
 .date {
 	font-size: 65%
+}
+
+.details-link {
+	display: inline-block;
+	margin:5px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;  
+	text-decoration: none;
+	padding: 5px;
+	color: #606060;
+	background-color: #e6e6e6;
+	width: 15%;
+	opacity: 1;
+	text-align: center;
 }
