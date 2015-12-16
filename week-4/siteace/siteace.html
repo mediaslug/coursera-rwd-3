@@ -2,18 +2,17 @@
   <title>siteace</title>
 </head>
 
-<body>
-	<!-- navbar  - you will be putting the login functions here -->
-	<nav class="navbar navbar-default">
-	  <div class="container-fluid">
-	    <div class="navbar-header">
-	      <a class="navbar-brand" href="#">
-	        Site Ace
-	      </a>
-	       {{> loginButtons}} 
-	    </div>
-	  </div>
-	</nav>
+<body>	
+</body>
+
+<template name="ApplicationLayout">
+	<!-- points at which i can insert content. "yield" is a placehoder for the router-->
+	{{>yield "navbar"}}
+	{{>yield "main"}}
+
+</template>
+
+<template name="add_and_list">
 
 	<div class="container">
 		{{#if currentUser}}
@@ -21,8 +20,21 @@
 		{{/if}}
 		{{> website_list}}
 	</div>
-</body>
+</template>
 
+<template name ="navbar">
+	<!-- navbar  - you will be putting the login functions here -->
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="/">
+	        Site Ace
+	      </a>
+	       {{> loginButtons}} 
+	    </div>
+	  </div>
+	</nav>
+</template>
 
 <template name="website_form">
 	<a class="btn btn-default js-toggle-website-form" href="#">
@@ -50,21 +62,23 @@
 
 <!-- template that displays several website items -->
 <template name="website_list">
-		You have posted {{count}} websites 
+	You have posted {{count}} websites 
 
 	<ol>
 	{{#each websites}}
-	{{>website_item}}
+		{{>website_item}}
 	{{/each}}
 	</ol>
 </template>
 
 <!-- template that displays individual website entries -->
 <template name="website_item">
-<li>
+<li class = "website">
 	<a href="{{url}}">{{title}}</a>
 	<p>
-		{{description}} 
+		{{description}} <br />
+		Added {{createdOn}}
+		<a href = "/detail/{{_id}}"> Details </a>
 	</p>
 	<a href="#" class="btn btn-default js-upvote">
 		<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
@@ -80,3 +94,38 @@
 	<!-- you will be putting your up and down vote buttons in here! -->
 </li>
 </template>
+
+<template name="website_detail">
+	<div class = "container">
+		<a href="{{url}}">{{title}}</a>
+			<p>
+				{{description}} <br />
+				Added {{createdOn}}
+				<span class = "vote"> {{vote}} </span>
+			</p>
+
+			<p>
+				<form id="comments_form" class = "js-save-comment">
+					<textarea class="form-control" id="comment" name="comment">
+
+					</textarea>
+					<button type="submit" class="btn btn-default"> Save Comment </button>
+
+				</form>
+			</p>
+			{{#each comments}}
+				<p class="comment">
+					{{comment}} <span class="date"> {{createdOn}} </span>
+				</p>
+
+			{{/each}}
+	</div>
+	
+</template>
+
+<template name="comments-list">
+
+</template>
+
+
+

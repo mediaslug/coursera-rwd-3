@@ -4,10 +4,38 @@
 }
 .vote {
 	font-size: 145%;
-	background-color: #999966;
+	background-color: #b3c2bf;
 	padding: 5px 10px 5px 10px;
 	border: 1px;
 	border-style: solid;
-	margin: 2px;
+	margin: 20px;
 
+}
+
+.website {
+	font-size: 120%;
+	background-color: #c0dfd9;
+	padding: 5px 10px 5px 10px;
+	border: 1px;
+	border-style: solid;
+	margin: 20px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.comment {
+	font-size: 120%;
+	background-color: #c0dfd9;
+	padding: 5px 10px 5px 10px;
+	border: 1px;
+	border-style: solid;
+	margin: 20px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+}
+
+.date {
+	font-size: 65%
 }

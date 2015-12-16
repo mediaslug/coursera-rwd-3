@@ -1,6 +1,40 @@
 Websites = new Mongo.Collection("websites");
+Comments = new Mongo.Collection("comments");
+
 
 if (Meteor.isClient) {
+
+	Router.configure({
+		layoutTemplate:"ApplicationLayout"
+	});
+
+	Router.route('/', function () {
+ 	 	this.render('navbar', {
+  			to:"navbar",
+  		});
+
+  		this.render('add_and_list', function(){
+  			to:"main"
+  		})
+	});
+
+	Router.route('/add', function() {
+		this.render('navbar', {to:"navbar"});
+		this.render('website_form', {to:"main"});
+
+	})	
+
+	Router.route('/detail/:_id', function () {
+	  this.render('navbar', {
+		  to:"navbar"
+	  });
+	  this.render('website_detail', {
+	  	to:"main",
+		data: function() {
+			return Websites.findOne({_id:this.params._id});
+		}
+	  });
+	});
 
 	// configure the accounts ui interface
 	Accounts.ui.config({
@@ -21,6 +55,18 @@ if (Meteor.isClient) {
           return Websites.find({createdBy:currentUser}).count();
         },
 
+	});
+
+	Template.website_detail.helpers({
+		comments:function() {
+			return Comments.find({}, {sort:{vote:1}})
+		}
+	});
+
+	Template.website_list.helpers({
+		getUser:function(){
+			return Meteor.user();
+		}
 	});
 
 
@@ -71,7 +117,10 @@ if (Meteor.isClient) {
 			var description = event.target.description.value;
 			var title = event.target.title.value;
 
-
+			if (url=="" || description=="") {
+				alert("URL is required.");
+				return false;
+			}
 			console.log("The url they entered is: "+url +description);
 
 			//  put your website saving code in here!
@@ -88,6 +137,19 @@ if (Meteor.isClient) {
 			} // end if user logged in
 			return false;// stop the form submit from reloading the page
 
+		}
+	});
+
+	Template.website_detail.events({
+		'submit .js-save-comment': function(event) {
+			var comment = event.target.comment.value;
+			console.log(comment);
+			Comments.insert({
+				comment:comment,
+	      		createdOn: new Date(),
+	      		createdBy: Meteor.user()._id, // _id provides access to unique database id for the user
+	         });
+			return false;
 		}
 	});
 }
