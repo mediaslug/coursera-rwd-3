@@ -54,20 +54,19 @@ if (Meteor.isClient) {
           var currentUser = Meteor.userId();
           return Websites.find({createdBy:currentUser}).count();
         },
+        getUser:function(){
+			return Meteor.user();
+		}
 
 	});
 
 	Template.website_detail.helpers({
 		comments:function() {
-			return Comments.find({}, {sort:{vote:1}})
+			return Comments.find({websiteId:Session.get("selectedWebsite")}, {sort:{createdOn:-1}})
 		}
 	});
 
-	Template.website_list.helpers({
-		getUser:function(){
-			return Meteor.user();
-		}
-	});
+
 
 
 	/////
@@ -93,16 +92,18 @@ if (Meteor.isClient) {
 			// (this is the data context for the template)
 			var websiteId = this._id;
 			console.log("Down voting website with id "+websiteId);
-			Websites.update(websiteId, {$inc:{vote: -1}})
 
 
 			// put the code in here to remove a vote from a website!
-			// get the current vote for the website id
-			Websites.find({ _id: "-------" }); // change  to website id
 			// subtract 1 from the voteCount
-			// store the vote back in the database
+			Websites.update(websiteId, {$inc:{vote: -1}})
 
 			return false;// prevent the button from reloading the page
+		},
+
+		'click .js-set-Id':function() {
+			var websiteId = this._id;
+			 Session.set('selectedWebsite', websiteId);
 		}
 	})
 
@@ -143,9 +144,10 @@ if (Meteor.isClient) {
 	Template.website_detail.events({
 		'submit .js-save-comment': function(event) {
 			var comment = event.target.comment.value;
-			console.log(comment);
+			console.log(comment + " " + this._id);
 			Comments.insert({
 				comment:comment,
+				websiteId:this._id,
 	      		createdOn: new Date(),
 	      		createdBy: Meteor.user()._id, // _id provides access to unique database id for the user
 	         });

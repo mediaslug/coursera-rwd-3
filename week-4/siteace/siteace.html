@@ -78,7 +78,7 @@
 	<p>
 		{{description}} <br />
 		Added {{createdOn}}
-		<a href = "/detail/{{_id}}"> Details </a>
+		<a href = "/detail/{{_id}}" class="js-set-Id"> Details </a>
 	</p>
 	<a href="#" class="btn btn-default js-upvote">
 		<span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
@@ -103,28 +103,28 @@
 				Added {{createdOn}}
 				<span class = "vote"> {{vote}} </span>
 			</p>
-
+{{_id}}
 			<p>
 				<form id="comments_form" class = "js-save-comment">
-					<textarea class="form-control" id="comment" name="comment">
-
-					</textarea>
+					<textarea class="form-control" id="comment" name="comment"></textarea>
 					<button type="submit" class="btn btn-default"> Save Comment </button>
 
 				</form>
 			</p>
-			{{#each comments}}
-				<p class="comment">
-					{{comment}} <span class="date"> {{createdOn}} </span>
-				</p>
 
-			{{/each}}
+			{{#each comments}}
+		<p class="comment">
+			{{comment}} <span class="date"> {{createdOn}}, {{_id}} </span>
+		</p>
+
+	{{/each}}
+			
 	</div>
 	
 </template>
 
-<template name="comments-list">
-
+<template name="comments_list">
+	
 </template>
 
 
