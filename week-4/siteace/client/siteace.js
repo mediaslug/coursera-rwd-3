@@ -4,13 +4,8 @@ Router.configure({
 });
 
 Router.route('/', function () {
-	 	this.render('navbar', {
-			to:"navbar",
-		});
-
-		this.render('add_and_list', function(){
-			to:"main"
-		})
+	 	this.render('navbar', { to:"navbar"});
+		this.render('add_and_list', {to:"main"});
 });
 
 Router.route('/add', function() {
@@ -23,6 +18,7 @@ Router.route('/detail/:_id', function () {
   this.render('navbar', {
 	  to:"navbar"
   });
+  
   this.render('website_detail', {
   	to:"main",
 	data: function() {
@@ -35,6 +31,17 @@ Router.route('/detail/:_id', function () {
 Accounts.ui.config({
 		passwordSignupFields: 'USERNAME_AND_OPTIONAL_EMAIL'
 });
+
+
+// ************* add search functionality
+//  create a source in the client
+var options = {
+  keepHistory: 1000 * 60 * 5,
+  localSearch: true
+};
+var fields = ['packageName', 'description'];
+
+PackageSearch = new SearchSource('websites', fields, options);
 
 /////
 // template helpers 
@@ -61,7 +68,23 @@ Template.website_detail.helpers({
 	}
 });
 
+// ********************************* search
+// get a reactive data source for this source, which can be used to render templates
 
+Template.searchResult.helpers({
+  getPackages: function() {
+    return PackageSearch.getData({
+      transform: function(matchText, regExp) {
+        return matchText.replace(regExp, "<b>$&</b>")
+      },
+      sort: {isoScore: -1}
+    });
+  },
+  
+  isLoading: function() {
+    return PackageSearch.getStatus().loading;
+  }
+});
 
 
 /////
@@ -73,7 +96,7 @@ Template.website_item.events({
 		// example of how you can access the id for the website in the database
 		// (this is the data context for the template)
 		var websiteId = this._id;
-		console.log("Up voting website with id "+websiteId);
+		// console.log("Up voting website with id "+websiteId);
 
 
 		// put the code in here to add a vote to a website!
@@ -86,7 +109,7 @@ Template.website_item.events({
 		// example of how you can access the id for the website in the database
 		// (this is the data context for the template)
 		var websiteId = this._id;
-		console.log("Down voting website with id "+websiteId);
+		// console.log("Down voting website with id "+websiteId);
 
 
 		// put the code in here to remove a vote from a website!
@@ -117,7 +140,7 @@ Template.website_form.events({
 			alert("URL is required.");
 			return false;
 		}
-		console.log("The url they entered is: "+url +description);
+		// console.log("The url they entered is: "+url +" " +description);
 
 		//  put your website saving code in here!
 
@@ -139,7 +162,7 @@ Template.website_form.events({
 Template.website_detail.events({
 	'submit .js-save-comment': function(event) {
 		var comment = event.target.comment.value;
-		console.log(comment + " " + this._id);
+		// console.log(comment + " " + this._id);
 		Comments.insert({
 			comment:comment,
 			websiteId:this._id,
@@ -148,4 +171,22 @@ Template.website_detail.events({
          });
 		return false;
 	}
+	,
+
+	'click .remove':function() {
+      var selectedWebsite = Session.get('selectedWebsite');
+      var confirm = window.confirm("want to delete?");
+      if (confirm) {
+        Websites.remove(selectedWebsite);  
+      }
+      
+    }
+});
+
+// ***************************** search
+Template.searchBox.events({
+  "keyup #search-box": _.throttle(function(e) {
+    var text = $(e.target).val().trim();
+    PackageSearch.search(text);
+  }, 200)
 });

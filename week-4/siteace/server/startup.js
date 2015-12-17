@@ -1,12 +1,38 @@
 
-	HTTP.call( 'GET', 'http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route', {}, function( error, response ) {
-	  // Handle the error or response here.
-	  console.log(response.headers.date);
-	});
+	// HTTP.call( 'GET', 'http://www.londoninternational.ac.uk/courses/undergraduate/goldsmiths/bsc-creative-computing-bsc-diploma-work-entry-route', {}, function( error, response ) {
+	//   // Handle the error or response here.
+	//   console.log(response.headers.date);
+	// });
 
 
 
+// **************************** search
 
+// define the data source in the server. In this case, we are doing a regular expression search, fetching data and sending them to the client:
+
+SearchSource.defineSource('websites', function(searchText, options) {
+  var options = {sort: {isoScore: -1}, limit: 20};
+  
+  if(searchText) {
+    var regExp = buildRegExp(searchText);
+    var selector = {$or: [
+      {packageName: regExp},
+      {description: regExp}
+    ]};
+    
+    return Websites.find(selector, options).fetch();
+  } else {
+    return Websites.find({}, options).fetch();
+  }
+});
+
+function buildRegExp(searchText) {
+  // this is a dumb implementation
+  var parts = searchText.trim().split(/[ \-\:]+/);
+  return new RegExp("(" + parts.join('|') + ")", "ig");
+}
+
+// ************************* startup 
 
   Meteor.startup(function () {
     // code to run on server at startup

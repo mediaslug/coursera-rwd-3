@@ -22,3 +22,5 @@ accounts-ui
 accounts-password
 iron:router
 http
+meteorhacks:search-source
+ejson

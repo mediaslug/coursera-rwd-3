@@ -34,9 +34,21 @@ Websites.allow({
 		return true;
 	},
 
-	remove: function() {
+	remove: function(userId, doc) {
 		// we do not allow sites to be deleted
-		return false;
+		if (Meteor.user()) {
+			if (doc.createdBy != userId) { // userId is the id of the person who has attempted the action
+			console.log("denied wrong userId");
+				return false;	
+			} else { // the user is logged in and userId matches createdBy
+				console.log("allowed")
+				return true;
+			}
+			
+		} else { // user is not logged in
+			console.log("denied not logged in")
+			return false;
+		}
 	}
 
 }); 
