@@ -16,7 +16,7 @@ SearchSource.defineSource('websites', function(searchText, options) {
   if(searchText) {
     var regExp = buildRegExp(searchText);
     var selector = {$or: [
-      {packageName: regExp},
+      {title: regExp},
       {description: regExp}
     ]};
     

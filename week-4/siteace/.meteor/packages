@@ -24,3 +24,4 @@ iron:router
 http
 meteorhacks:search-source
 ejson
+check

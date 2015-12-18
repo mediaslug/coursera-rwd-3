@@ -4,20 +4,18 @@ Router.configure({
 });
 
 Router.route('/', function () {
-	 	this.render('navbar', { to:"navbar"});
-		this.render('add_and_list', {to:"main"});
+ 	this.render('navbar', { to:"navbar"});
+	this.render('add_and_list', {to:"main"});
 });
 
-Router.route('/add', function() {
+Router.route('/search', function() {
 	this.render('navbar', {to:"navbar"});
-	this.render('website_form', {to:"main"});
+	this.render('search', {to:"main"});
 
 })	
 
 Router.route('/detail/:_id', function () {
-  this.render('navbar', {
-	  to:"navbar"
-  });
+	this.render('navbar', {to:"navbar"});
   
   this.render('website_detail', {
   	to:"main",

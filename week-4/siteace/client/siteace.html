@@ -27,9 +27,13 @@
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
 	    <div class="navbar-header">
-	      <a class="navbar-brand" href="/">  List of Sites </a>
+	      <a href="/">  List of Sites </a>
+	      &nbsp;
+	      <a href="/search">Search</a>
+
 	    </div>
-	   	{{> loginButtons}} 
+	    <div class="navbar-brand"> {{> loginButtons}} </div>
+	   	 
 	  </div>
 	</nav>
 </template>
@@ -63,9 +67,6 @@
 	{{#if currentUser}}
 		You have posted {{count}} websites 
 	{{/if}}
-
-	{{> searchBox }}
-    {{> searchResult}}
     
 	<ol>
 	{{#each websites}}
@@ -132,7 +133,7 @@
 
 
 <template name="searchBox">
-  <input type="text" id="search-box" placeholder="search packages here" />
+  <input type="text" id="search-box" class="form-control" placeholder="search" />
 </template>
 
 <template name="searchResult">
@@ -146,7 +147,7 @@
     {{#each getPackages}}
     <div class="package">
       <h4 class="name">
-        <a href="{{git}}" target="_blank">{{{packageName}}}</a>
+        <a href="{{url}}" target="_blank">{{{title}}}</a>
       </h4>
       <div class="description">
         {{{description}}}
@@ -156,5 +157,11 @@
   </div>
 </template>
 
-
+<template name = "search">
+	<div class="container">
+	{{> searchBox }}
+    {{> searchResult}}
+	</div>
+	
+</template>	
 

@@ -6,6 +6,7 @@ if (Meteor.isClient) {
   // By creating helper functions, we can execute code from within a template, thereby creating a dynamic interface.
   // the helpers keyword is a special keyword that allows us to define multiple helper functions inside a single block of code.
 
+
   Template.leaderboard.helpers({
         // the helpers are defined in JSON format with the name of hte helper as the key and an associated function as the value
         player:function() {
@@ -110,6 +111,8 @@ if (Meteor.isClient) {
         createdBy: currentUser
       });
 
+      // call the log method
+      Meteor.call('sendLogMessage');
       //return false; 
     }
 
@@ -124,6 +127,12 @@ if (Meteor.isServer) {
    // PlayersList.insert({name:"warrick", score:0})
    // PlayersList.insert({name:"tom", score:0})
    // console.log(PlayersList.find().fetch());
+
+   Meteor.methods({
+    'sendLogMessage': function() {
+      console.log("log message"); 
+    }
+   });
 
    // imagine that the publish function is transmitting data into the ether
    Meteor.publish('thePlayers', function() {
